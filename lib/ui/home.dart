@@ -1,8 +1,8 @@
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'pages/my_tasks.dart';
+import 'package:login_test/ui/pages/shared%20tasks/groups_page.dart';
+import 'pages/myTasks/my_tasks.dart';
 import 'pages/settings/settings_page.dart';
-import 'pages/shared_tasks.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,28 +13,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var pages = [
     MyTask(),
-    SharedPage(),
+    GroupsPage(),
     Settings(),
   ];
 ///////// app bar title
-  var titles = ['My Tasks', 'Shared Tasks', 'Settings'];
+  // var titles = ['My Tasks', 'Shared Tasks', 'Settings'];
 
   var selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //  backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(11, 196, 131, 1),
-        elevation: 0,
-        title: Text(
-          titles[selectedIndex],
-          style: TextStyle(
-            fontFamily: 'Nunito',
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Color.fromRGBO(11, 196, 131, 1),
+      //   elevation: 0,
+      //   title: Text(
+      //     titles[selectedIndex],
+      //     style: TextStyle(
+      //       fontFamily: 'Nunito',
+      //       fontWeight: FontWeight.w900,
+      //     ),
+      //   ),
+      // ),
       body: pages[selectedIndex],
       ////////////////////////////////////////////////////////////////// bottom nav bar
 

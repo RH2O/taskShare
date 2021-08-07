@@ -100,7 +100,7 @@ class _LogInScreenState extends State<LogInScreen> {
                         textInputDecoration.copyWith(hintText: 'Password'),
                     onChanged: (value) {
                       setState(() {
-                        password = value;
+                        password = value.trim();
                       });
                     },
                   ),

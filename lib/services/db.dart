@@ -4,43 +4,33 @@ import 'package:firebase_auth/firebase_auth.dart';
 /////////////////// firestore  DataBase
 
 class DBServices {
-// Adding New Custumer TO firestore
+// Adding New task TO firestore
 
-  Future addTask(
+  Future<DocumentReference> addTask(
     String title,
     String description,
   ) async {
     var uid = FirebaseAuth.instance.currentUser.uid;
     final CollectionReference mycollection = FirebaseFirestore.instance
-        .collection('users')
+        .collection('myTasks')
         .doc('all')
         .collection(uid);
-    await mycollection
+    Future<DocumentReference> grp = mycollection
         .add({'title': title, 'description': description, 'done': false});
+
+    return grp;
   }
 
-////////////////////////////// update the check
+//////////////////////////////   check & uncheck task
 
-  Future update(String docId) async {
+  Future checkToggle(String docId, bool b) async {
     var uid = FirebaseAuth.instance.currentUser.uid;
     final CollectionReference mycollection = FirebaseFirestore.instance
-        .collection('users')
+        .collection('myTasks')
         .doc('all')
         .collection(uid);
 
-    await mycollection.doc(docId).update({'done': true});
-  }
-
-  ////////////////////////////////// uncheck
-
-  Future unCkeck(String docId) async {
-    var uid = FirebaseAuth.instance.currentUser.uid;
-    final CollectionReference mycollection = FirebaseFirestore.instance
-        .collection('users')
-        .doc('all')
-        .collection(uid);
-
-    await mycollection.doc(docId).update({'done': false});
+    await mycollection.doc(docId).update({'done': b});
   }
 
 // remove a Task
@@ -48,60 +38,79 @@ class DBServices {
   Future removeTask(String docId) async {
     var uid = FirebaseAuth.instance.currentUser.uid;
     final CollectionReference mycollection = FirebaseFirestore.instance
-        .collection('users')
+        .collection('myTasks')
         .doc('all')
         .collection(uid);
 
     await mycollection.doc(docId).delete();
   }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // //////////////////////////////////////////////////////////////////////////////////////////////////////////// new Shared
 
-//////////////////////////  adding shared users
+  /////////////////  add task group  to user groups (to the id of curren users)
 
-  Future addShared(
-      String title, String description, String selectedCollection) async {
-    // var uid = FirebaseAuth.instance.currentUser.uid;
+  addUserGroups(String taskID, String groupName) {
+    var uid = FirebaseAuth.instance.currentUser.uid;
     final CollectionReference mycollection = FirebaseFirestore.instance
-        .collection('shared')
-        .doc('all')
-        .collection(selectedCollection);
-    await mycollection
+        .collection('userGroups')
+        .doc(uid)
+        .collection('groups');
+
+    return mycollection.doc(taskID).set({'name': groupName});
+  }
+
+////////////////////////////////////// create a new tasks group
+
+  createNewGroup(String groupName) {
+    //var uid = FirebaseAuth.instance.currentUser.uid;
+    final CollectionReference mycollection =
+        FirebaseFirestore.instance.collection('groups');
+
+    return mycollection
+        .add({}).then((value) => addUserGroups(value.id, groupName));
+  }
+
+///////////////////////// remove group
+
+  removeGroup(String docID) {
+    var uid = FirebaseAuth.instance.currentUser.uid;
+    final CollectionReference mycollection = FirebaseFirestore.instance
+        .collection('userGroups')
+        .doc(uid)
+        .collection('groups');
+
+    mycollection.doc(docID).delete();
+  }
+
+  ///// add a task to a group
+
+  addSharedTask(String title, String description, String groupID) {
+    final CollectionReference mycollection = FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupID)
+        .collection('tasks');
+    return mycollection
         .add({'title': title, 'description': description, 'done': false});
   }
 
-////////////////////////////////////////// remove Shared
-  ///
-  Future removeShared(String docId, String currentId) async {
+  /////// remove one task from spicific group
+
+  Future removeFromShared(String docId, String groupID) async {
     // var uid = FirebaseAuth.instance.currentUser.uid;
     final CollectionReference mycollection = FirebaseFirestore.instance
-        .collection('shared')
-        .doc('all')
-        .collection(currentId);
+        .collection('groups')
+        .doc(groupID)
+        .collection('tasks');
 
     await mycollection.doc(docId).delete();
   }
 
-/////////////////////////////////////////// check Shared
-  ///
-  Future updateShared(String docId, String currentId) async {
-    // var uid = FirebaseAuth.instance.currentUser.uid;
+  Future sharedCheckToggle(String docId, bool b, String groupID) async {
     final CollectionReference mycollection = FirebaseFirestore.instance
-        .collection('shared')
-        .doc('all')
-        .collection(currentId);
+        .collection('groups')
+        .doc(groupID)
+        .collection('tasks');
 
-    await mycollection.doc(docId).update({'done': true});
-  }
-  ////////////////////////////////////////// unCkeck Shared
-
-  Future unCheckShared(String docId, String currentId) async {
-    // var uid = FirebaseAuth.instance.currentUser.uid;
-    final CollectionReference mycollection = FirebaseFirestore.instance
-        .collection('shared')
-        .doc('all')
-        .collection(currentId);
-
-    await mycollection.doc(docId).update({'done': false});
+    await mycollection.doc(docId).update({'done': b});
   }
 }

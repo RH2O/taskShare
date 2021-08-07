@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "login_test",
+            "name": "TaskShare",
             "request": "launch",
             "type": "dart"
         }

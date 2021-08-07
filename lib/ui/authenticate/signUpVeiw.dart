@@ -102,7 +102,7 @@ class _RegisterState extends State<Register> {
                       ),
                       onChanged: (value) {
                         setState(() {
-                          email = value;
+                          email = value.trim();
                         });
                       },
                     ),
@@ -117,7 +117,7 @@ class _RegisterState extends State<Register> {
                           textInputDecoration.copyWith(hintText: 'Password'),
                       onChanged: (value) {
                         setState(() {
-                          password = value;
+                          password = value.trim();
                         });
                       },
                     ),
